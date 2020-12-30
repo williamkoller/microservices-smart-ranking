@@ -2,13 +2,13 @@ import { Body, Controller, Logger, Post, UsePipes, ValidationPipe } from '@nestj
 import { ClientProxyProvider } from 'src/shared/providers/client-proxy.provider'
 import { CreateCategoryDto } from '../dtos/create-category.dto'
 
-@Controller('api/v1')
+@Controller('api/v1/categories')
 export class CategoriesController {
   private readonly logger = new Logger(CategoriesController.name)
 
   constructor(private readonly clientProxyProvider: ClientProxyProvider) {}
 
-  @Post('categories')
+  @Post()
   @UsePipes(ValidationPipe)
   createCategory(@Body() createCategoryDto: CreateCategoryDto) {
     this.clientProxyProvider.getAdminServerInstance().emit('create-category', createCategoryDto)
