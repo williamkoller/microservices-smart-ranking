@@ -1,0 +1,30 @@
+version: '3'
+services:
+  admin-server-backend:
+    container_name: admin-server-backend
+    restart: always
+    build: .
+    env_file:
+      - .env
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      - admin_server_db
+    environment:
+      - DB_URL=DB_URI
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+
+  admin_server_db:
+    image: mongo
+    container_name: admin_server_db
+    env_file:
+      - .env
+    volumes:
+      - admin_server_db:/data/admin_server_db
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+
+volumes:
+  admin_server_db:
