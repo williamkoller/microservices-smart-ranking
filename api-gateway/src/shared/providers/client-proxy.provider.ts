@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { ClientProxyFactory, Transport } from '@nestjs/microservices'
+import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices'
 
 @Injectable()
 export class ClientProxyProvider {
   constructor(private readonly configService: ConfigService) {}
 
-  getAdminServerInstance() {
+  getAdminServerInstance(): ClientProxy {
     return ClientProxyFactory.create({
       transport: Transport.RMQ,
       options: {
@@ -16,7 +16,7 @@ export class ClientProxyProvider {
     })
   }
 
-  getChallengeInstance() {
+  getChallengeInstance(): ClientProxy {
     return ClientProxyFactory.create({
       transport: Transport.RMQ,
       options: {
@@ -26,7 +26,7 @@ export class ClientProxyProvider {
     })
   }
 
-  getRankingInstance() {
+  getRankingInstance(): ClientProxy {
     return ClientProxyFactory.create({
       transport: Transport.RMQ,
       options: {
