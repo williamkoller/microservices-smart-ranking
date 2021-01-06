@@ -20,7 +20,7 @@ export class CategoriesController {
     return this.clientProxyProvider.getAdminServerInstance().send('search-all-categories', _id ? _id : '')
   }
 
-  @Put('categories/:_id')
+  @Put('/:_id')
   @UsePipes(ValidationPipe)
   updateCategory(@Body() updateCategoryDto: UpdateCategoryDto, @Param() _id: string): Observable<any> {
     return this.clientProxyProvider
