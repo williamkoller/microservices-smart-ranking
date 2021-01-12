@@ -15,7 +15,7 @@ export class CategoriesController {
   }
   @Get()
   searchAllCategories(@Query('id') id: string): Observable<any> {
-    return this.clientProxyProvider.requestAdminServerInstance().send('search-all-categories', id || '')
+    return this.clientProxyProvider.requestAdminServerInstance().send('find-categories', id || '')
   }
 
   @Put('/:_id')
