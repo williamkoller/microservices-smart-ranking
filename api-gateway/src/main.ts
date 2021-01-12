@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
-import { HttpExceptionFilter } from './commom/filters/http-exception.filter'
+import { HttpExceptionFilter } from './common/filters/http-exception.filter'
 import * as momentTimezone from 'moment-timezone'
-import { LoggingInterceptor } from './commom/interceptors/logging.interceptor'
-import { TimeoutInterceptor } from './commom/interceptors/timeout.interceptor'
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
+import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)

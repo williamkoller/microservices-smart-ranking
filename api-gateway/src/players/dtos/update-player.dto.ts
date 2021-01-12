@@ -1,11 +1,9 @@
-import { IsOptional, IsString } from 'class-validator'
+import { IsOptional } from 'class-validator'
 
 export class UpdatePlayerDto {
-  @IsString()
   @IsOptional()
-  name?: string
+  category?: string
 
-  @IsString()
   @IsOptional()
-  phoneNumber?: number
+  urlPhotoPlayer?: string
 }

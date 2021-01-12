@@ -1,15 +1,15 @@
-import { IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator'
+import { IsEmail, IsNotEmpty } from 'class-validator'
 
 export class CreatePlayerDto {
-  @IsString()
-  @IsNotEmpty({ message: 'This field cannot be empty.' })
-  name: string
-
-  @IsNumber()
-  @IsNotEmpty({ message: 'This field cannot be empty.' })
-  phoneNumber: number
+  @IsNotEmpty()
+  phoneNumber: string
 
   @IsEmail()
-  @IsNotEmpty({ message: 'This field cannot be empty.' })
   email: string
+
+  @IsNotEmpty()
+  name: string
+
+  @IsNotEmpty()
+  category: string
 }

@@ -14,8 +14,8 @@ export class CategoriesController {
     return this.clientProxyProvider.requestAdminServerInstance().emit('create-category', createCategoryDto)
   }
   @Get()
-  searchAllCategories(@Query('categoryId') _id: string): Observable<any> {
-    return this.clientProxyProvider.requestAdminServerInstance().send('search-all-categories', _id ? _id : '')
+  searchAllCategories(@Query('id') id: string): Observable<any> {
+    return this.clientProxyProvider.requestAdminServerInstance().send('search-all-categories', id || '')
   }
 
   @Put('/:_id')
@@ -23,6 +23,6 @@ export class CategoriesController {
   updateCategory(@Body() updateCategoryDto: UpdateCategoryDto, @Param() _id: string): Observable<any> {
     return this.clientProxyProvider
       .requestAdminServerInstance()
-      .emit('update-category', { id: _id, category: updateCategoryDto })
+      .emit('update-category', { id: _id, ...updateCategoryDto })
   }
 }
