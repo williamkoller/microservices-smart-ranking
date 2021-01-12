@@ -11,18 +11,18 @@ export class CategoriesController {
   @Post()
   @UsePipes(ValidationPipe)
   createCategory(@Body() createCategoryDto: CreateCategoryDto): Observable<any> {
-    return this.clientProxyProvider.getAdminServerInstance().emit('create-category', createCategoryDto)
+    return this.clientProxyProvider.requestAdminServerInstance().emit('create-category', createCategoryDto)
   }
   @Get()
   searchAllCategories(@Query('categoryId') _id: string): Observable<any> {
-    return this.clientProxyProvider.getAdminServerInstance().send('search-all-categories', _id ? _id : '')
+    return this.clientProxyProvider.requestAdminServerInstance().send('search-all-categories', _id ? _id : '')
   }
 
   @Put('/:_id')
   @UsePipes(ValidationPipe)
   updateCategory(@Body() updateCategoryDto: UpdateCategoryDto, @Param() _id: string): Observable<any> {
     return this.clientProxyProvider
-      .getAdminServerInstance()
+      .requestAdminServerInstance()
       .emit('update-category', { id: _id, category: updateCategoryDto })
   }
 }
