@@ -6,7 +6,7 @@ import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservice
 export class ClientProxyProvider {
   constructor(private readonly configService: ConfigService) {}
 
-  getAdminServerInstance(): ClientProxy {
+  requestAdminServerInstance(): ClientProxy {
     return ClientProxyFactory.create({
       transport: Transport.RMQ,
       options: {
@@ -16,7 +16,7 @@ export class ClientProxyProvider {
     })
   }
 
-  getChallengeInstance(): ClientProxy {
+  requestChallengeInstance(): ClientProxy {
     return ClientProxyFactory.create({
       transport: Transport.RMQ,
       options: {
@@ -26,7 +26,7 @@ export class ClientProxyProvider {
     })
   }
 
-  getRankingInstance(): ClientProxy {
+  requestRankingInstance(): ClientProxy {
     return ClientProxyFactory.create({
       transport: Transport.RMQ,
       options: {
