@@ -1,12 +1,8 @@
-type Event = {
-  name: string
-  operation: string
-  value: number
-}
+import { EventType } from '../types/event.type'
 
 export class CategoryDto {
   id: string
   name: string
   description: string
-  events: Array<Event>
+  events: Array<EventType>
 }

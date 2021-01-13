@@ -1,10 +1,5 @@
 import { ArrayMinSize, IsArray, IsNotEmpty, IsString } from 'class-validator'
-
-export type Event = {
-  name: string
-  operation: string
-  value: number
-}
+import { EventType } from '../types/event.type'
 
 export class CreateCategoryDto {
   @IsString()
@@ -17,5 +12,5 @@ export class CreateCategoryDto {
 
   @IsArray()
   @ArrayMinSize(1)
-  events: Array<Event>
+  events: Array<EventType>
 }
