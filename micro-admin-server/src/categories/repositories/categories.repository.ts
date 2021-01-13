@@ -22,7 +22,7 @@ export class CategoriesRepository {
   }
 
   async findAll(): Promise<Category[]> {
-    return this.categoryModel.find().populate('players')
+    return this.categoryModel.find({}, { __v: false }).populate('players')
   }
 
   async findById(id: string): Promise<Category> {
