@@ -11,7 +11,7 @@ export class PlayersRepository {
   constructor(@InjectModel(Player.name) private playerModel: Model<PlayerDocument>) {}
 
   async findAll(): Promise<PlayerDto[]> {
-    return this.playerModel.find()
+    return this.playerModel.find({}, { __v: false })
   }
 
   async findById(id: string): Promise<Player> {
