@@ -1,13 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document, Types } from 'mongoose'
+import { EventType } from '../types/event.type'
 
 export type CategoryDocument = Category & Document
-
-export type Event = {
-  name: string
-  operation: string
-  value: number
-}
 
 @Schema()
 export class Category {
@@ -18,9 +13,9 @@ export class Category {
   description: string
 
   @Prop()
-  events: Array<Event>
+  events: Array<EventType>
 
-  @Prop({ type: Types.ObjectId, ref: 'Player' })
+  @Prop({ type: Types.ObjectId, ref: 'Players' })
   players: Array<Types.ObjectId>
 }
 

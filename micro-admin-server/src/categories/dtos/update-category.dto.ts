@@ -1,7 +1,7 @@
-import { Event } from '../models/category.schema'
+import { EventType } from '../types/event.type'
 
 export class UpdateCategoryDto {
   id?: string
   description: string
-  events: Array<Event>
+  events: Array<EventType>
 }
