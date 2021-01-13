@@ -22,11 +22,11 @@ export class CategoriesRepository {
   }
 
   async findAll(): Promise<Category[]> {
-    return this.categoryModel.find({}, { __v: false }).populate('players')
+    return await this.categoryModel.find({}, { __v: false }).populate('players')
   }
 
   async findById(id: string): Promise<Category> {
-    return this.categoryModel.findById(id)
+    return await this.categoryModel.findById(id)
   }
 
   async update(id: string, updateCategoryDto: UpdateCategoryDto): Promise<void> {

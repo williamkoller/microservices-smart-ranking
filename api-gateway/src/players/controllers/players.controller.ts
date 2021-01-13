@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common'
@@ -23,17 +24,12 @@ export class PlayersController {
   constructor(private readonly clientProxyProvider: ClientProxyProvider) {}
 
   @Get()
-  async findAllPlayers(): Promise<Observable<any>> {
+  async findAllPlayers(@Query('id') id: string): Promise<Observable<any>> {
     return await this.clientProxyProvider
       .requestAdminServerInstance()
-      .send('find-players', '')
+      .send('find-players', id ? id : '')
       .pipe(timeout(5000))
       .toPromise()
-  }
-
-  @Get(':id')
-  async findById(@Param('id') id: string): Promise<Observable<any>> {
-    return await this.clientProxyProvider.requestAdminServerInstance().send('find-players', id).toPromise()
   }
 
   @Post()
