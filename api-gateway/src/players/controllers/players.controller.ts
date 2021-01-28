@@ -69,6 +69,6 @@ export class PlayersController {
   @Post('/:id/upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file, @Param('_id') _id: string) {
-    this.logger.log(file)
+    this.logger.log(file, _id)
   }
 }
