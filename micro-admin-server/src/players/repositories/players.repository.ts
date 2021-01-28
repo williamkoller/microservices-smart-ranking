@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model, Types } from 'mongoose'
-import { CreatePlayerDto } from '../dtos/create-player.dto'
-import { PlayerDto } from '../dtos/player.dto'
-import { UpdatePlayerDto } from '../dtos/update-player.dto'
-import { Player, PlayerDocument } from '../models/player.schema'
+import { CreatePlayerDto, PlayerDto, UpdatePlayerDto } from '@/players/dtos'
+import { Player, PlayerDocument } from '@/players/models/player.schema'
 
 @Injectable()
 export class PlayersRepository {

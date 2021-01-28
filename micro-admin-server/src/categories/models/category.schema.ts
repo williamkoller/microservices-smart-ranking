@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document, Types } from 'mongoose'
-import { EventType } from '../types/event.type'
+import { EventType } from '@/categories/types/event.type'
 
 export type CategoryDocument = Category & Document
 

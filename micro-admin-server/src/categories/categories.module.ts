@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
-import { PlayersModule } from 'src/players/players.module'
-import { CategoriesController } from './controllers/categories.controller'
-import { Category, CategorySchema } from './models/category.schema'
-import { CategoriesRepository } from './repositories/categories.repository'
-import { CategoriesService } from './services/categories.service'
+import { PlayersModule } from '@/players/players.module'
+import { CategoriesController } from '@/categories/controllers/categories.controller'
+import { Category, CategorySchema } from '@/categories/models/category.schema'
+import { CategoriesRepository } from '@/categories/repositories/categories.repository'
+import { CategoriesService } from '@/categories/services/categories.service'
 
 @Module({
   imports: [

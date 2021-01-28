@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { RpcException } from '@nestjs/microservices'
-import { CreatePlayerDto } from '../dtos/create-player.dto'
-import { UpdatePlayerDto } from '../dtos/update-player.dto'
-import { Player } from '../models/player.schema'
-import { PlayersRepository } from '../repositories/players.repository'
+import { CreatePlayerDto, UpdatePlayerDto } from '@/players/dtos'
+import { Player } from '@/players/models/player.schema'
+import { PlayersRepository } from '@/players/repositories/players.repository'
 
 @Injectable()
 export class PlayersService {
