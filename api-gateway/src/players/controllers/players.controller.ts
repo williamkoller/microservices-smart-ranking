@@ -9,14 +9,16 @@ import {
   Post,
   Put,
   Query,
+  UploadedFile,
+  UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-express'
 import { Observable } from 'rxjs'
 import { timeout } from 'rxjs/operators'
-import { ClientProxyProvider } from 'src/shared/providers/client-proxy.provider'
-import { CreatePlayerDto } from '../dtos/create-player.dto'
-import { UpdatePlayerDto } from '../dtos/update-player.dto'
+import { ClientProxyProvider } from '@/shared/providers/client-proxy.provider'
+import { CreatePlayerDto, UpdatePlayerDto } from '@/players/dtos'
 
 @Controller('api/v1/players')
 export class PlayersController {
@@ -62,5 +64,11 @@ export class PlayersController {
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<Observable<any>> {
     return await this.clientProxyProvider.requestAdminServerInstance().emit('delete-player', id).toPromise()
+  }
+
+  @Post('/:id/upload')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(@UploadedFile() file, @Param('_id') _id: string) {
+    this.logger.log(file)
   }
 }

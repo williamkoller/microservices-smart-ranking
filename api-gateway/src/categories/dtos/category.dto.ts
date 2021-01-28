@@ -1,4 +1,4 @@
-import { EventType } from '../types/event.type'
+import { EventType } from '@/categories/types/event.type'
 
 export class CategoryDto {
   id: string

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { ClientProxyProvider } from '../providers/client-proxy.provider'
+import { ClientProxyProvider } from '@/shared/providers/client-proxy.provider'
 
 @Module({
   providers: [ClientProxyProvider],

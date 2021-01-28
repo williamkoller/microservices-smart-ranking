@@ -1,5 +1,5 @@
 import { ArrayMinSize, IsArray, IsOptional, IsString } from 'class-validator'
-import { EventType } from '../types/event.type'
+import { EventType } from '@/categories/types/event.type'
 
 export class UpdateCategoryDto {
   @IsString()

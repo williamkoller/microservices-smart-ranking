@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
-import { ClientProxyModule } from 'src/shared/modules/client-proxy.module'
-import { CategoriesController } from './controllers/categories.controller'
+import { ClientProxyModule } from '@/shared/modules/client-proxy.module'
+import { CategoriesController } from '@/categories/controllers/categories.controller'
 
 @Module({
   imports: [ClientProxyModule],

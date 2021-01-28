@@ -9,7 +9,7 @@ import { PlayersModule } from './players/players.module'
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRoot(process.env.MONGO_URI, {
+    MongooseModule.forRoot(process.env.MONGO_URI_PROD, {
       useUnifiedTopology: true,
       useNewUrlParser: true,
       useCreateIndex: true,

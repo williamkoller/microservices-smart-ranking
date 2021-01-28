@@ -1,0 +1,13 @@
+version: '3'
+services:
+  server-backend:
+    container_name: server-backend
+    restart: always
+    build: .
+    env_file:
+      - .env
+    ports:
+      - ${PORT}:${PORT}
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
