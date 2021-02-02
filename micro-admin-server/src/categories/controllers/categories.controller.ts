@@ -1,7 +1,10 @@
 import { Controller, Logger } from '@nestjs/common'
 import { Ctx, EventPattern, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
-import { CreateCategoryDto, UpdateCategoryDto } from '@/categories/dtos'
 import { CategoriesService } from '@/categories/services/categories.service'
+import { CreateCategoryDto } from '@/categories/dtos/create-category.dto'
+import { UpdateCategoryDto } from '@/categories/dtos/update-category.dto'
+
+const ackErrors: string[] = ['E11000']
 
 @Controller()
 export class CategoriesController {
@@ -14,10 +17,19 @@ export class CategoriesController {
     const channel = context.getChannelRef()
     const originalMessage = context.getMessage()
 
-    this.logger.log(createCategoryDto)
+    this.logger.log(`createCategoryDto: ${JSON.stringify(createCategoryDto)}`)
 
-    await this.categoriesService.create(createCategoryDto)
-    await channel.ack(originalMessage)
+    try {
+      await this.categoriesService.create(createCategoryDto)
+      await channel.ack(originalMessage)
+    } catch (e) {
+      this.logger.error(`Error: ${JSON.stringify(e.message)}`)
+      const filterAckError = ackErrors.filter((ackError) => e.message.includes(ackError))
+
+      if (filterAckError.length > 0) {
+        await channel.ack(originalMessage)
+      }
+    }
   }
 
   @MessagePattern('find-categories')
@@ -27,10 +39,9 @@ export class CategoriesController {
 
     try {
       if (id) {
-        return this.categoriesService.findById(id)
+        return this.categoriesService.listById(id)
       }
-
-      return this.categoriesService.findAll()
+      return this.categoriesService.listCategories()
     } finally {
       await channel.ack(originalMessage)
     }
@@ -41,11 +52,18 @@ export class CategoriesController {
     const channel = context.getChannelRef()
     const originalMessage = context.getMessage()
 
-    this.logger.log(updateCategoryDto)
+    this.logger.log(`updateCategoryDto: ${JSON.stringify(updateCategoryDto)}`)
+    try {
+      const { id, description, events } = updateCategoryDto
+      await this.categoriesService.update(id, { description, events })
+      await channel.ack(originalMessage)
+    } catch (e) {
+      this.logger.error(`Error: ${JSON.stringify(e.message)}`)
+      const filterAckError = ackErrors.filter((ackError) => e.message.includes(ackError))
 
-    const { id, description, events } = updateCategoryDto
-
-    await this.categoriesService.update(id, { description, events })
-    await channel.ack(originalMessage)
+      if (filterAckError.length > 0) {
+        await channel.ack(originalMessage)
+      }
+    }
   }
 }

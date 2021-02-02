@@ -3,7 +3,7 @@ import { Observable } from 'rxjs'
 import { ClientProxyProvider } from '@/shared/providers/client-proxy.provider'
 import { CreateCategoryDto, UpdateCategoryDto } from '@/categories/dtos'
 
-@Controller('api/v1/categories')
+@Controller('categories')
 export class CategoriesController {
   constructor(private readonly clientProxyProvider: ClientProxyProvider) {}
 

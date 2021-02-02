@@ -1,52 +1,41 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model, Types } from 'mongoose'
-import { CreatePlayerDto, PlayerDto, UpdatePlayerDto } from '@/players/dtos'
-import { Player, PlayerDocument } from '@/players/models/player.schema'
+import { Model } from 'mongoose'
+import { IPlayer } from '@/players/interfaces/player.interface'
+import { ResponseDeletePlayer } from '@/players/types/response-delete-player.type'
+import { UpdatePlayerDto } from '@/players/dtos/update-player.dto'
+import { CreatePlayerDto } from '../dtos/create-player.dto'
 
 @Injectable()
 export class PlayersRepository {
-  constructor(@InjectModel(Player.name) private playerModel: Model<PlayerDocument>) {}
+  constructor(@InjectModel('Player') private playerModel: Model<IPlayer>) {}
 
-  async findAll(): Promise<PlayerDto[]> {
-    return this.playerModel.find({}, { __v: false })
+  async create(createPlayerDto: CreatePlayerDto): Promise<IPlayer> {
+    const playerCreated = new this.playerModel(createPlayerDto)
+    return playerCreated.save()
   }
 
-  async findById(id: string): Promise<Player> {
-    return this.playerModel.findById(id)
+  async listPlayers(): Promise<Array<IPlayer>> {
+    return await this.playerModel.find().populate('categories')
   }
 
-  async findByEmail(email: string): Promise<Player | null> {
-    return this.playerModel.findOne({ email })
+  async findById(id: string): Promise<IPlayer> {
+    return await this.playerModel.findById(id)
   }
 
-  async create(createPlayerDto: CreatePlayerDto): Promise<Player> {
-    const player = new this.playerModel(createPlayerDto)
-
-    player.category = Types.ObjectId(createPlayerDto.category)
-
-    await player.save()
-
-    return player
+  async update(_id: string, updatePlayerDto: UpdatePlayerDto): Promise<IPlayer> {
+    return await this.playerModel.findOneAndUpdate({ _id }, { $set: updatePlayerDto })
   }
 
-  async update(id: string, updatePlayerDto: UpdatePlayerDto): Promise<Player> {
-    return this.playerModel.findOneAndUpdate(
-      {
-        _id: id,
-      },
-      {
-        $set: {
-          ...updatePlayerDto,
-          category: Types.ObjectId(updatePlayerDto.category),
-        },
-      },
-    )
+  async delete(_id: string): Promise<ResponseDeletePlayer> {
+    const iPlayer = await this.playerModel.deleteOne({ _id })
+    return {
+      iPlayer,
+      message: 'Player deleted with successfully.',
+    }
   }
 
-  async delete(id: string): Promise<any> {
-    return this.playerModel.deleteOne({
-      _id: id,
-    })
+  async findByEmail(email: string): Promise<IPlayer> {
+    return await this.playerModel.findOne({ email })
   }
 }

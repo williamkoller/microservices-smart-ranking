@@ -1,68 +1,42 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
-import { CreateCategoryDto, UpdateCategoryDto, AddCategoryPlayerDto } from '@/categories/dtos'
-import { Category } from '@/categories/models/category.schema'
-import { CategoriesRepository } from '@/categories/repositories/categories.repository'
+import { Injectable, Logger } from '@nestjs/common'
 import { RpcException } from '@nestjs/microservices'
-import { PlayersService } from '@/players/services/players.service'
+import { CategoriesRepository } from '@/categories/repositories/categories.repository'
+import { ICategory } from '@/categories/interfaces/category.interface'
+import { CreateCategoryDto } from '@/categories/dtos/create-category.dto'
+import { UpdateCategoryDto } from '@/categories/dtos/update-category.dto'
 
 @Injectable()
 export class CategoriesService {
-  constructor(
-    private readonly categoriesRepository: CategoriesRepository,
-    private readonly playersService: PlayersService,
-  ) {}
+  private logger = new Logger(CategoriesService.name)
+  constructor(private readonly categoriesRepository: CategoriesRepository) {}
 
-  async findAll(): Promise<Category[]> {
-    return this.categoriesRepository.findAll()
+  async create(createCategoryDto: CreateCategoryDto): Promise<ICategory> {
+    try {
+      return await this.categoriesRepository.create(createCategoryDto)
+    } catch (e) {
+      this.logger.log(`Error: ${JSON.stringify(e)}`)
+      throw new RpcException(e.message)
+    }
+  }
+  async listCategories(): Promise<ICategory[]> {
+    return this.categoriesRepository.listCategories()
   }
 
-  async findById(id: string): Promise<Category> {
-    const category = await this.categoriesRepository.findById(id)
-
-    if (!category) {
-      throw new RpcException('Category not found')
+  async listById(_id: string): Promise<ICategory> {
+    try {
+      return await this.categoriesRepository.listById(_id)
+    } catch (e) {
+      this.logger.log(`Error: ${JSON.stringify(e)}`)
+      throw new RpcException(e.message)
     }
-
-    return category
   }
 
-  async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
-    const findCategoryByName = await this.categoriesRepository.findByName(createCategoryDto.name)
-
-    if (findCategoryByName) {
-      throw new RpcException('Category already exists')
+  async update(_id: string, updateCategoryDto: UpdateCategoryDto): Promise<ICategory> {
+    try {
+      return await this.categoriesRepository.update(_id, updateCategoryDto)
+    } catch (e) {
+      this.logger.log(`Error: ${JSON.stringify(e)}`)
+      throw new RpcException(e.message)
     }
-
-    return this.categoriesRepository.create(createCategoryDto)
-  }
-
-  async update(id: string, updateCategoryDto: UpdateCategoryDto): Promise<void> {
-    const category = await this.categoriesRepository.findById(id)
-
-    if (!category) {
-      throw new NotFoundException('Category not found')
-    }
-
-    return this.categoriesRepository.update(id, updateCategoryDto)
-  }
-
-  async addCategoryPlayer(params: AddCategoryPlayerDto) {
-    const { categoryId, playerId } = params
-
-    const category = await this.categoriesRepository.findById(categoryId)
-
-    if (!category) {
-      throw new RpcException('Category not found')
-    }
-
-    await this.playersService.findById(playerId)
-
-    const playerCategoryAlreadyExists = await this.categoriesRepository.findPlayerInCategory(categoryId, playerId)
-
-    if (playerCategoryAlreadyExists && playerCategoryAlreadyExists.length > 0) {
-      throw new RpcException('Player already associate in category')
-    }
-
-    return this.categoriesRepository.addPlayerToCategory(playerId, categoryId, category)
   }
 }

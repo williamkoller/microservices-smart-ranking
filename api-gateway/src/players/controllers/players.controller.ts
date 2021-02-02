@@ -8,7 +8,6 @@ import {
   Param,
   Post,
   Put,
-  Query,
   UploadedFile,
   UseInterceptors,
   UsePipes,
@@ -20,18 +19,23 @@ import { timeout } from 'rxjs/operators'
 import { ClientProxyProvider } from '@/shared/providers/client-proxy.provider'
 import { CreatePlayerDto, UpdatePlayerDto } from '@/players/dtos'
 
-@Controller('api/v1/players')
+@Controller('players')
 export class PlayersController {
   private readonly logger = new Logger(PlayersController.name)
   constructor(private readonly clientProxyProvider: ClientProxyProvider) {}
 
   @Get()
-  async findAllPlayers(@Query('id') id: string): Promise<Observable<any>> {
+  async listPlayers(): Promise<Observable<any>> {
     return await this.clientProxyProvider
       .requestAdminServerInstance()
-      .send('find-players', id ? id : '')
+      .send('find-players', '')
       .pipe(timeout(5000))
       .toPromise()
+  }
+
+  @Get('id')
+  async findById(@Param('id') id: string): Promise<Observable<any>> {
+    return await this.clientProxyProvider.requestAdminServerInstance().send('find-players', id).toPromise()
   }
 
   @Post()
@@ -43,21 +47,12 @@ export class PlayersController {
       .toPromise()
   }
 
-  @Put(':id')
+  @Put(':_id')
   @UsePipes(ValidationPipe)
-  async update(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDto): Promise<Observable<any>> {
-    const category = await this.clientProxyProvider
-      .requestAdminServerInstance()
-      .send('find-categories', updatePlayerDto.category)
-      .toPromise()
-
-    if (!category) {
-      throw new BadRequestException('Category not found')
-    }
-
+  async update(@Param('_id') _id: string, @Body() updatePlayerDto: UpdatePlayerDto): Promise<Observable<any>> {
     return await this.clientProxyProvider
       .requestAdminServerInstance()
-      .emit('update-player', { id, ...updatePlayerDto })
+      .emit('update-player', { id: _id, ...updatePlayerDto })
       .toPromise()
   }
 

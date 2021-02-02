@@ -1,52 +1,28 @@
-import { Injectable } from '@nestjs/common'
+import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model, Types } from 'mongoose'
-import { CreateCategoryDto, UpdateCategoryDto } from '@/categories/dtos'
-import { Category, CategoryDocument } from '@/categories/models/category.schema'
+import { Injectable } from '@nestjs/common'
+import { ICategory } from '@/categories/interfaces/category.interface'
+import { UpdateCategoryDto } from '@/categories/dtos/update-category.dto'
+import { CreateCategoryDto } from '@/categories/dtos/create-category.dto'
 
 @Injectable()
 export class CategoriesRepository {
-  constructor(@InjectModel(Category.name) private categoryModel: Model<CategoryDocument>) {}
+  constructor(@InjectModel('Category') private categoryModel: Model<ICategory>) {}
 
-  async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
+  async create(createCategoryDto: CreateCategoryDto): Promise<ICategory> {
     const category = new this.categoryModel(createCategoryDto)
-
-    await category.save()
-
-    return category
+    return await category.save()
   }
 
-  async findByName(name: string): Promise<Category> {
-    return this.categoryModel.findOne({ name })
+  async listCategories(): Promise<Array<ICategory>> {
+    return await this.categoryModel.find()
   }
 
-  async findAll(): Promise<Category[]> {
-    return await this.categoryModel.find({}, { __v: false }).populate('players')
+  async listById(_id: string): Promise<ICategory> {
+    return await this.categoryModel.findById(_id)
   }
 
-  async findById(id: string): Promise<Category> {
-    return await this.categoryModel.findById(id)
-  }
-
-  async update(id: string, updateCategoryDto: UpdateCategoryDto): Promise<void> {
-    return this.categoryModel.updateOne({ _id: id }, { $set: updateCategoryDto })
-  }
-
-  async addPlayerToCategory(playerId: string, categoryId: string, category: Category): Promise<void> {
-    if (category.players) {
-      category.players.push(Types.ObjectId(playerId))
-    } else {
-      category.players = [Types.ObjectId(playerId)]
-    }
-
-    await this.categoryModel.findOneAndUpdate({ _id: categoryId }, { $set: category })
-  }
-
-  async findByPlayerId(playerId: string): Promise<Category> {
-    return this.categoryModel.findOne({ players: Types.ObjectId(playerId) })
-  }
-
-  async findPlayerInCategory(categoryId: string, playerId: string): Promise<Category[]> {
-    return this.categoryModel.find({ _id: categoryId, players: { $in: [Types.ObjectId(playerId)] } })
+  async update(_id: string, updateCategoryDto: UpdateCategoryDto): Promise<ICategory> {
+    return await this.categoryModel.findOneAndUpdate({ _id }, { $set: updateCategoryDto })
   }
 }

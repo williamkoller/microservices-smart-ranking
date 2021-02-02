@@ -4,7 +4,7 @@ import { EventType } from '@/categories/types/event.type'
 export class CreateCategoryDto {
   @IsString()
   @IsNotEmpty()
-  name: string
+  category: string
 
   @IsString()
   @IsNotEmpty()

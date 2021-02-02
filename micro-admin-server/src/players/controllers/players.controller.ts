@@ -1,7 +1,10 @@
 import { Controller, Logger } from '@nestjs/common'
-import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
-import { CreatePlayerDto, UpdatePlayerDto } from '@/players/dtos'
+import { Ctx, MessagePattern, EventPattern, Payload, RmqContext } from '@nestjs/microservices'
 import { PlayersService } from '@/players/services/players.service'
+import { UpdatePlayerDto } from '../dtos/update-player.dto'
+import { CreatePlayerDto } from '../dtos/create-player.dto'
+
+const ackErrors: string[] = ['E11000']
 
 @Controller()
 export class PlayersController {
@@ -9,58 +12,77 @@ export class PlayersController {
 
   constructor(private readonly playersService: PlayersService) {}
 
-  @MessagePattern('find-players')
-  async findAllCategories(@Payload() id: string, @Ctx() context: RmqContext) {
-    const channel = context.getChannelRef()
-    const originalMessage = context.getMessage()
+  @EventPattern('create-player')
+  async create(@Payload() createPlayerDto: CreatePlayerDto, @Ctx() ctx: RmqContext) {
+    const channel = ctx.getChannelRef()
+    const originalMessage = ctx.getMessage()
 
     try {
-      if (id) {
-        return this.playersService.findById(id)
-      }
+      this.logger.log(`iPlayer: ${JSON.stringify(createPlayerDto)}`)
+      await this.playersService.create(createPlayerDto)
+      await channel.ack(originalMessage)
+    } catch (e) {
+      this.logger.log(`Error: ${JSON.stringify(e.message)}`)
+      const filterAckError = ackErrors.filter((ackError) => e.message.includes(ackError))
 
-      return this.playersService.findAll()
+      if (filterAckError.length > 0) {
+        await channel.ack(originalMessage)
+      }
+    }
+  }
+
+  @MessagePattern('find-players')
+  async listPlayers(@Payload() id: string, @Ctx() ctx: RmqContext) {
+    const channel = ctx.getChannelRef()
+    const originalMessage = ctx.getMessage()
+    try {
+      if (id) {
+        return await this.playersService.findById(id)
+      }
+      return await this.playersService.listPlayers()
     } finally {
       await channel.ack(originalMessage)
     }
   }
 
-  @MessagePattern('create-player')
-  async create(@Payload() createPlayerDto: CreatePlayerDto, @Ctx() context: RmqContext) {
-    const channel = context.getChannelRef()
-    const originalMessage = context.getMessage()
+  @EventPattern('update-player')
+  async update(@Payload() updatePlayerDto: UpdatePlayerDto, @Ctx() ctx: RmqContext) {
+    const channel = ctx.getChannelRef()
+    const originalMessage = ctx.getMessage()
+    try {
+      this.logger.log(`updatePlayerDto: ${JSON.stringify(updatePlayerDto)}`)
 
-    this.logger.log(JSON.stringify(createPlayerDto))
+      const { id, category, igmUrl } = updatePlayerDto
 
-    await this.playersService.create(createPlayerDto)
+      await this.playersService.update(id, {
+        category,
+        igmUrl,
+      })
+      await channel.ack(originalMessage)
+    } catch (e) {
+      this.logger.log(`Error: ${JSON.stringify(e.message)}`)
+      const filterAckError = ackErrors.filter((ackError) => e.message.includes(ackError))
 
-    await channel.ack(originalMessage)
+      if (filterAckError.length > 0) {
+        await channel.ack(originalMessage)
+      }
+    }
   }
 
-  @MessagePattern('update-player')
-  async update(@Payload() updatePlayerDto: UpdatePlayerDto, @Ctx() context: RmqContext) {
-    const channel = context.getChannelRef()
-    const originalMessage = context.getMessage()
+  @EventPattern('delete-player')
+  async delete(@Payload() id: string, @Ctx() ctx: RmqContext) {
+    const channel = ctx.getChannelRef()
+    const originalMessage = ctx.getMessage()
+    try {
+      await this.playersService.delete(id)
+      await channel.ack(originalMessage)
+    } catch (e) {
+      this.logger.log(`Error: ${JSON.stringify(e.message)}`)
+      const filterAckError = ackErrors.filter((ackError) => e.message.includes(ackError))
 
-    this.logger.log(JSON.stringify(updatePlayerDto))
-
-    const { id, category, imgUrl } = updatePlayerDto
-
-    await this.playersService.update(id, {
-      ...(category ? { category } : {}),
-      ...(imgUrl ? { imgUrl } : {}),
-    })
-
-    await channel.ack(originalMessage)
-  }
-
-  @MessagePattern('delete-player')
-  async delete(@Payload() id: string, @Ctx() context: RmqContext) {
-    const channel = context.getChannelRef()
-    const originalMessage = context.getMessage()
-
-    await this.playersService.deleteById(id)
-
-    await channel.ack(originalMessage)
+      if (filterAckError.length > 0) {
+        await channel.ack(originalMessage)
+      }
+    }
   }
 }
