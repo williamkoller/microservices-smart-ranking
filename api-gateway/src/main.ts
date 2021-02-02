@@ -9,6 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   app.useGlobalInterceptors(new LoggingInterceptor(), new TimeoutInterceptor())
   app.useGlobalFilters(new HttpExceptionFilter())
+  app.setGlobalPrefix('api/v1')
   Date.prototype.toJSON = (): any => {
     return momentTimezone(this).tz('America/Sao_Paulo').format('YYYY-MM-DD HH:mm:ss.SSS')
   }
