@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -18,11 +17,13 @@ import { Observable } from 'rxjs'
 import { timeout } from 'rxjs/operators'
 import { ClientProxyProvider } from '@/shared/providers/client-proxy.provider'
 import { CreatePlayerDto, UpdatePlayerDto } from '@/players/dtos'
+import { AwsS3Service } from '@/aws/s3/aws-s3.service'
+import { ReturnFileS3Type } from '@/aws/types/return-file-s3.type'
 
 @Controller('players')
 export class PlayersController {
   private readonly logger = new Logger(PlayersController.name)
-  constructor(private readonly clientProxyProvider: ClientProxyProvider) {}
+  constructor(private readonly clientProxyProvider: ClientProxyProvider, private readonly awsS3Service: AwsS3Service) {}
 
   @Get()
   async listPlayers(): Promise<Observable<any>> {
@@ -61,9 +62,10 @@ export class PlayersController {
     return await this.clientProxyProvider.requestAdminServerInstance().emit('delete-player', id).toPromise()
   }
 
-  @Post('/:id/upload')
+  @Post('/:_id/upload')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file, @Param('_id') _id: string) {
+  async uploadFile(@UploadedFile() file, @Param('_id') _id: string): Promise<ReturnFileS3Type> {
     this.logger.log(file, _id)
+    return this.awsS3Service.uploadFile(file, _id)
   }
 }
