@@ -1,25 +1,29 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { Document } from 'mongoose'
-import { EventType } from '@/categories/types/event.type'
+import * as mongoose from 'mongoose'
 
-export type CategoryDocument = Category & Document
-
-@Schema()
-export class Category {
-  @Prop()
-  category: string
-
-  @Prop()
-  description: string
-
-  @Prop()
-  events: EventType[]
-
-  @Prop()
-  createdAt: Date
-
-  @Prop()
-  updatedAt: Date
-}
-
-export const CategorySchema = SchemaFactory.createForClass(Category)
+export const CategorySchema = new mongoose.Schema(
+  {
+    category: {
+      type: String,
+    },
+    description: {
+      type: String,
+    },
+    events: [
+      {
+        name: {
+          type: String,
+        },
+        operation: {
+          type: String,
+        },
+        value: {
+          value: Number,
+        },
+      },
+    ],
+  },
+  {
+    timestamps: true,
+    collection: 'categories',
+  },
+)

@@ -1,10 +1,12 @@
 import { Document } from 'mongoose'
-import { ICategory } from '@/categories/interfaces/category.interface'
+import { Category } from '@/categories/interfaces/category.interface'
 
-export interface IPlayer extends Document {
+export type Player = Document
+
+export interface PlayerDocument extends Document {
   name: string
   email: string
   tel: string
-  category: ICategory
+  category: Category
   imgUrl: string
 }

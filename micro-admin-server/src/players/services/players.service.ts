@@ -1,10 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { RpcException } from '@nestjs/microservices'
 import { PlayersRepository } from '@/players/repositories/players.repository'
-import { ResponseDeletePlayer } from '@/players/types/response-delete-player.type'
 import { UpdatePlayerDto } from '../dtos/update-player.dto'
 import { CreatePlayerDto } from '../dtos/create-player.dto'
-import { Player } from '../schemas/player.schema'
+import { Player } from '../interfaces/player.interface'
+import { MessageReturn } from '../types/message-return.type'
 
 @Injectable()
 export class PlayersService {
@@ -25,7 +25,11 @@ export class PlayersService {
   }
 
   async listPlayers(): Promise<Array<Player>> {
-    return this.playersRepository.listPlayers()
+    const players = await this.playersRepository.listAll()
+    if (!players) {
+      throw new RpcException('No record found.')
+    }
+    return players
   }
 
   async findById(id: string): Promise<Player> {
@@ -41,7 +45,7 @@ export class PlayersService {
     return await this.playersRepository.update(id, updatePlayerDto)
   }
 
-  async delete(id: string): Promise<ResponseDeletePlayer> {
+  async delete(id: string): Promise<MessageReturn> {
     await this.findById(id)
     return await this.playersRepository.delete(id)
   }

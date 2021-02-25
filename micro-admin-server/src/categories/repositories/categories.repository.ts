@@ -3,11 +3,11 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Injectable } from '@nestjs/common'
 import { UpdateCategoryDto } from '@/categories/dtos/update-category.dto'
 import { CreateCategoryDto } from '@/categories/dtos/create-category.dto'
-import { Category, CategoryDocument } from '../schemas/category.schema'
+import { Category } from '../interfaces/category.interface'
 
 @Injectable()
 export class CategoriesRepository {
-  constructor(@InjectModel(Category.name) private categoryModel: Model<CategoryDocument>) {}
+  constructor(@InjectModel('Category') private categoryModel: Model<Category>) {}
 
   async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
     const category = new this.categoryModel(createCategoryDto)

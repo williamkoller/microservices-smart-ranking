@@ -1,39 +1,29 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { Document, Types } from 'mongoose'
+import * as monsoose from 'mongoose'
 
-export type PlayerDocument = Player & Document
-
-@Schema()
-export class Player {
-  @Prop()
-  _id: Types.ObjectId
-
-  @Prop()
-  name: string
-
-  @Prop({ unique: true })
-  email: string
-
-  @Prop()
-  tel: string
-
-  @Prop()
-  ranking: string
-
-  @Prop()
-  rankingPosition: string
-
-  @Prop()
-  imgUrl: string
-
-  @Prop({ type: Types.ObjectId, ref: 'Category' })
-  category: Types.ObjectId
-
-  @Prop()
-  createdAt: Date
-
-  @Prop()
-  updatedAt: Date
-}
-
-export const PlayerSchema = SchemaFactory.createForClass(Player)
+export const PlayerSchema = new monsoose.Schema(
+  {
+    name: {
+      type: String,
+    },
+    email: {
+      type: String,
+      unique: true,
+    },
+    tel: {
+      type: String,
+    },
+    ranking: {
+      type: String,
+    },
+    rankingPosition: {
+      type: String,
+    },
+    imgUrl: {
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+    collection: 'players',
+  },
+)

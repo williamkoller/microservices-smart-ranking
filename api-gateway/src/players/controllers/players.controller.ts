@@ -71,11 +71,14 @@ export class PlayersController {
 
     const imgUrl = await this.awsS3Service.uploadFile(file, _id)
 
-    const updatePlayerDto: UpdatePlayerDto = {}
-    updatePlayerDto.igmUrl = imgUrl.url
+    // const updatePlayerDto: UpdatePlayerDto = {}
+    // updatePlayerDto.igmUrl = imgUrl.url
 
-    await this.clientProxyProvider.requestAdminServerInstance().emit('update-player', { _id, imgUrl }).toPromise()
+    return await this.clientProxyProvider
+      .requestAdminServerInstance()
+      .emit('update-player', { _id, imgUrl })
+      .toPromise()
 
-    return await this.clientProxyProvider.requestAdminServerInstance().send('find-players', _id).toPromise()
+    // return await this.clientProxyProvider.requestAdminServerInstance().send('find-players', _id).toPromise()
   }
 }

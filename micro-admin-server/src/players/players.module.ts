@@ -3,13 +3,13 @@ import { PlayersService } from '@/players/services/players.service'
 import { PlayersController } from '@/players/controllers/players.controller'
 import { PlayersRepository } from '@/players/repositories/players.repository'
 import { MongooseModule } from '@nestjs/mongoose'
-import { Player, PlayerSchema } from '@/players/schemas/player.schema'
+import { PlayerSchema } from '@/players/schemas/player.schema'
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       {
-        name: Player.name,
+        name: 'Player',
         schema: PlayerSchema,
       },
     ]),

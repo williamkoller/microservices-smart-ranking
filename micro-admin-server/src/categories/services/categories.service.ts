@@ -3,7 +3,7 @@ import { RpcException } from '@nestjs/microservices'
 import { CategoriesRepository } from '@/categories/repositories/categories.repository'
 import { CreateCategoryDto } from '@/categories/dtos/create-category.dto'
 import { UpdateCategoryDto } from '@/categories/dtos/update-category.dto'
-import { Category } from '../schemas/category.schema'
+import { Category } from '../interfaces/category.interface'
 
 @Injectable()
 export class CategoriesService {
