@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { S3 } from 'aws-sdk'
-import { IUrl } from '@/aws/interfaces/url.interface'
+import { UrlType } from '@/aws/types/url.type'
 
 @Injectable()
 export class AwsS3Service {
@@ -15,7 +15,7 @@ export class AwsS3Service {
     })
   }
 
-  public async uploadFile(file: any, id: string): Promise<IUrl> {
+  public async uploadFile(file: any, id: string): Promise<UrlType> {
     try {
       const bucketName = this.configService.get<string>('AWS_S3_BUCKET_NAME')
 
