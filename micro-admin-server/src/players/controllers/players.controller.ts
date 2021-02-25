@@ -52,11 +52,11 @@ export class PlayersController {
     try {
       this.logger.log(`updatePlayerDto: ${JSON.stringify(updatePlayerDto)}`)
 
-      const { id, category, igmUrl } = updatePlayerDto
+      const { id, category, imgUrl } = updatePlayerDto
 
       await this.playersService.update(id, {
-        category,
-        igmUrl,
+        ...(category ? { category } : {}),
+        ...(imgUrl ? { imgUrl } : {}),
       })
       await channel.ack(originalMessage)
     } catch (e) {

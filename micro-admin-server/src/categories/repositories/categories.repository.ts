@@ -1,28 +1,28 @@
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { Injectable } from '@nestjs/common'
-import { ICategory } from '@/categories/interfaces/category.interface'
 import { UpdateCategoryDto } from '@/categories/dtos/update-category.dto'
 import { CreateCategoryDto } from '@/categories/dtos/create-category.dto'
+import { Category, CategoryDocument } from '../schemas/category.schema'
 
 @Injectable()
 export class CategoriesRepository {
-  constructor(@InjectModel('Category') private categoryModel: Model<ICategory>) {}
+  constructor(@InjectModel(Category.name) private categoryModel: Model<CategoryDocument>) {}
 
-  async create(createCategoryDto: CreateCategoryDto): Promise<ICategory> {
+  async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
     const category = new this.categoryModel(createCategoryDto)
     return await category.save()
   }
 
-  async listCategories(): Promise<Array<ICategory>> {
+  async listCategories(): Promise<Array<Category>> {
     return await this.categoryModel.find()
   }
 
-  async listById(_id: string): Promise<ICategory> {
+  async listById(_id: string): Promise<Category> {
     return await this.categoryModel.findById(_id)
   }
 
-  async update(_id: string, updateCategoryDto: UpdateCategoryDto): Promise<ICategory> {
+  async update(_id: string, updateCategoryDto: UpdateCategoryDto): Promise<Category> {
     return await this.categoryModel.findOneAndUpdate({ _id }, { $set: updateCategoryDto })
   }
 }

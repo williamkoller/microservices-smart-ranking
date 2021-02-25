@@ -6,4 +6,5 @@ export interface IPlayer extends Document {
   email: string
   tel: string
   category: ICategory
+  imgUrl: string
 }

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { BadRequestException, Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { S3 } from 'aws-sdk'
 import { ReturnFileS3Type } from '../types/return-file-s3.type'
@@ -6,32 +6,37 @@ import { ReturnFileS3Type } from '../types/return-file-s3.type'
 @Injectable()
 export class AwsS3Service {
   private logger = new Logger(AwsS3Service.name)
-  constructor(private readonly configService: ConfigService) {}
-  public async uploadFile(file: any, id: string): Promise<ReturnFileS3Type> {
-    const s3 = new S3({
+  private s3: S3
+  constructor(private readonly configService: ConfigService) {
+    this.s3 = new S3({
       region: this.configService.get<string>('AWS_S3_REGION'),
       accessKeyId: this.configService.get<string>('AWS_S3_ACCESS_KEY_ID'),
       secretAccessKey: this.configService.get<string>('AWS_S3_SECRET_ACCESS_KEY'),
     })
+  }
 
-    const fileExtension = file.originalname.split('.')[1]
+  public async uploadFile(file: any, id: string): Promise<ReturnFileS3Type> {
+    try {
+      const bucketName = this.configService.get<string>('AWS_S3_BUCKET_NAME')
 
-    const urlKey = `${id}.${fileExtension}`
+      const fileExt = file.originalname.split('.')[1]
 
-    this.logger.log(`urlKey: ${urlKey}`)
+      const urlKey = `${id}.${fileExt}`
 
-    const bucketName = this.configService.get<string>('AWS_S3_BUCKET_NAME')
+      await this.s3
+        .putObject({
+          Bucket: bucketName,
+          Body: file.buffer,
+          Key: urlKey,
+        })
+        .promise()
 
-    await s3
-      .putObject({
-        Body: file.buffer,
-        Bucket: bucketName,
-        Key: urlKey,
-      })
-      .promise()
-
-    return {
-      url: `https://${bucketName}.s3.amazonaws.com/${urlKey}`,
+      return {
+        url: `https://${bucketName}.s3.amazonaws.com/${urlKey}`,
+      }
+    } catch (e) {
+      this.logger.error(`Error: ${JSON.stringify(e.message)}`)
+      throw new BadRequestException(e.message)
     }
   }
 }

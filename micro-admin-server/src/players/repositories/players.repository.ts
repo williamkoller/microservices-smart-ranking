@@ -1,30 +1,32 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
-import { IPlayer } from '@/players/interfaces/player.interface'
+import { Model, Types } from 'mongoose'
 import { ResponseDeletePlayer } from '@/players/types/response-delete-player.type'
 import { UpdatePlayerDto } from '@/players/dtos/update-player.dto'
-import { CreatePlayerDto } from '../dtos/create-player.dto'
+import { CreatePlayerDto } from '@/players/dtos/create-player.dto'
+import { Player, PlayerDocument } from '@/players/schemas/player.schema'
 
 @Injectable()
 export class PlayersRepository {
-  constructor(@InjectModel('Player') private playerModel: Model<IPlayer>) {}
+  constructor(@InjectModel('Player') private playerModel: Model<PlayerDocument>) {}
 
-  async create(createPlayerDto: CreatePlayerDto): Promise<IPlayer> {
+  async create(createPlayerDto: CreatePlayerDto): Promise<Player> {
     const playerCreated = new this.playerModel(createPlayerDto)
     return playerCreated.save()
   }
 
-  async listPlayers(): Promise<Array<IPlayer>> {
-    return await this.playerModel.find().populate('categories')
+  async listPlayers(): Promise<Array<Player>> {
+    return await this.playerModel.find().populate('categories').exec()
   }
 
-  async findById(id: string): Promise<IPlayer> {
+  async findById(id: string): Promise<Player> {
     return await this.playerModel.findById(id)
   }
 
-  async update(_id: string, updatePlayerDto: UpdatePlayerDto): Promise<IPlayer> {
-    return await this.playerModel.findOneAndUpdate({ _id }, { $set: updatePlayerDto })
+  async update(_id: string, updatePlayerDto: UpdatePlayerDto): Promise<Player> {
+    return await this.playerModel.findByIdAndUpdate(_id, {
+      $set: { ...updatePlayerDto, category: Types.ObjectId(updatePlayerDto.category) },
+    })
   }
 
   async delete(_id: string): Promise<ResponseDeletePlayer> {
@@ -35,7 +37,7 @@ export class PlayersRepository {
     }
   }
 
-  async findByEmail(email: string): Promise<IPlayer> {
+  async findByEmail(email: string): Promise<Player> {
     return await this.playerModel.findOne({ email })
   }
 }

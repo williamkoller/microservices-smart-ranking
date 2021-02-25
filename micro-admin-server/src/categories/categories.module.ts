@@ -4,15 +4,15 @@ import { CategoriesController } from '@/categories/controllers/categories.contro
 import { CategoriesRepository } from '@/categories/repositories/categories.repository'
 import { CategoriesService } from '@/categories/services/categories.service'
 import { MongooseModule } from '@nestjs/mongoose'
-import { CategoryModel } from './models/category.model'
+import { Category, CategorySchema } from '@/categories/schemas/category.schema'
 
 @Module({
   imports: [
     PlayersModule,
     MongooseModule.forFeature([
       {
-        name: 'Category',
-        schema: CategoryModel,
+        name: Category.name,
+        schema: CategorySchema,
       },
     ]),
   ],
