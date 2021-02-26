@@ -1,8 +1,7 @@
 import { Controller, Logger } from '@nestjs/common'
 import { Ctx, MessagePattern, EventPattern, Payload, RmqContext } from '@nestjs/microservices'
 import { PlayersService } from '@/players/services/players.service'
-import { UpdatePlayerDto } from '../dtos/update-player.dto'
-import { CreatePlayerDto } from '../dtos/create-player.dto'
+import { Player } from '@/players/interfaces/player.interface'
 
 const ackErrors: string[] = ['E11000']
 
@@ -13,13 +12,13 @@ export class PlayersController {
   constructor(private readonly playersService: PlayersService) {}
 
   @EventPattern('create-player')
-  async create(@Payload() createPlayerDto: CreatePlayerDto, @Ctx() ctx: RmqContext) {
+  async create(@Payload() player: Player, @Ctx() ctx: RmqContext) {
     const channel = ctx.getChannelRef()
     const originalMessage = ctx.getMessage()
 
     try {
-      this.logger.log(`iPlayer: ${JSON.stringify(createPlayerDto)}`)
-      await this.playersService.create(createPlayerDto)
+      this.logger.log(`iPlayer: ${JSON.stringify(player)}`)
+      await this.playersService.create(player)
       await channel.ack(originalMessage)
     } catch (e) {
       this.logger.log(`Error: ${JSON.stringify(e.message)}`)
@@ -46,21 +45,17 @@ export class PlayersController {
   }
 
   @EventPattern('update-player')
-  async update(@Payload() updatePlayerDto: UpdatePlayerDto, @Ctx() ctx: RmqContext) {
+  async update(@Payload() data: any, @Ctx() ctx: RmqContext) {
     const channel = ctx.getChannelRef()
     const originalMessage = ctx.getMessage()
     try {
-      this.logger.log(`updatePlayerDto: ${JSON.stringify(updatePlayerDto)}`)
-
-      const { id, category, imgUrl } = updatePlayerDto
-
-      await this.playersService.update(id, {
-        ...(category ? { category } : {}),
-        ...(imgUrl ? { imgUrl } : {}),
-      })
+      this.logger.log(`data: ${JSON.stringify(data)}`)
+      const _id: string = data.id
+      const player: Player = data.player
+      await this.playersService.update(_id, player)
       await channel.ack(originalMessage)
     } catch (e) {
-      this.logger.log(`Error: ${JSON.stringify(e.message)}`)
+      this.logger.log(`Error: ${JSON.stringify(e)}`)
       const filterAckError = ackErrors.filter((ackError) => e.message.includes(ackError))
 
       if (filterAckError.length > 0) {
@@ -70,11 +65,11 @@ export class PlayersController {
   }
 
   @EventPattern('delete-player')
-  async delete(@Payload() id: string, @Ctx() ctx: RmqContext) {
+  async delete(@Payload() _id: string, @Ctx() ctx: RmqContext) {
     const channel = ctx.getChannelRef()
     const originalMessage = ctx.getMessage()
     try {
-      await this.playersService.delete(id)
+      await this.playersService.delete(_id)
       await channel.ack(originalMessage)
     } catch (e) {
       this.logger.log(`Error: ${JSON.stringify(e.message)}`)

@@ -1,8 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { RpcException } from '@nestjs/microservices'
 import { PlayersRepository } from '@/players/repositories/players.repository'
-import { UpdatePlayerDto } from '../dtos/update-player.dto'
-import { CreatePlayerDto } from '../dtos/create-player.dto'
 import { Player } from '../interfaces/player.interface'
 import { MessageReturn } from '../types/message-return.type'
 
@@ -11,13 +9,13 @@ export class PlayersService {
   private logger = new Logger(PlayersService.name)
   constructor(private readonly playersRepository: PlayersRepository) {}
 
-  async create(createPlayerDto: CreatePlayerDto): Promise<Player> {
+  async create(player: Player): Promise<Player> {
     try {
-      const playerExists = await this.playersRepository.findByEmail(createPlayerDto.email)
+      const playerExists = await this.playersRepository.findByEmail(player.email)
       if (playerExists) {
         throw new RpcException('E-mail already in use')
       }
-      return await this.playersRepository.create(createPlayerDto)
+      return await this.playersRepository.create(player)
     } catch (e) {
       this.logger.log(`Error: ${JSON.stringify(e.message)}`)
       throw new RpcException(e.message)
@@ -41,8 +39,8 @@ export class PlayersService {
     return player
   }
 
-  async update(id: string, updatePlayerDto: UpdatePlayerDto): Promise<Player> {
-    return await this.playersRepository.update(id, updatePlayerDto)
+  async update(_id: string, player: Player): Promise<Player> {
+    return await this.playersRepository.update(_id, player)
   }
 
   async delete(id: string): Promise<MessageReturn> {

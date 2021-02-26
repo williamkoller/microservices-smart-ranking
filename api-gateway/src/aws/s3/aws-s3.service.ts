@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { S3 } from 'aws-sdk'
-import { UrlType } from '@/aws/types/url.type'
+import { UrlType } from '../types/url.type'
 
 @Injectable()
 export class AwsS3Service {
@@ -18,12 +18,13 @@ export class AwsS3Service {
   public async uploadFile(file: any, id: string): Promise<UrlType> {
     try {
       const bucketName = this.configService.get<string>('AWS_S3_BUCKET_NAME')
+      const region = this.configService.get<string>('AWS_S3_REGION')
 
       const fileExt = file.originalname.split('.')[1]
 
       const urlKey = `${id}.${fileExt}`
 
-      await this.s3
+      this.s3
         .putObject({
           Bucket: bucketName,
           Body: file.buffer,
@@ -32,7 +33,7 @@ export class AwsS3Service {
         .promise()
 
       return {
-        url: `https://${bucketName}.s3.amazonaws.com/${urlKey}`,
+        url: `https://${bucketName}.s3-${region}.amazonaws.com/${urlKey}`,
       }
     } catch (e) {
       this.logger.error(`Error: ${JSON.stringify(e.message)}`)

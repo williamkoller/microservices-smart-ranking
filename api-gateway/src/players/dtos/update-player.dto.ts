@@ -8,5 +8,5 @@ export class UpdatePlayerDto {
   category?: string
 
   @IsOptional()
-  igmUrl?: string
+  imgUrl?: string
 }

@@ -1,22 +1,20 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-import { UpdatePlayerDto } from '@/players/dtos/update-player.dto'
-import { CreatePlayerDto } from '@/players/dtos/create-player.dto'
-import { Player } from '../interfaces/player.interface'
-import { MessageReturn } from '../types/message-return.type'
+import { Player } from '@/players/interfaces/player.interface'
+import { MessageReturn } from '@/players/types/message-return.type'
 
 @Injectable()
 export class PlayersRepository {
   constructor(@InjectModel('Player') private playerModel: Model<Player>) {}
 
-  async create(createPlayerDto: CreatePlayerDto): Promise<Player> {
-    const player = new this.playerModel(createPlayerDto)
-    return await player.save()
+  async create(player: Player): Promise<Player> {
+    const createdPlayer = new this.playerModel(player)
+    return await createdPlayer.save()
   }
 
   async listAll(): Promise<Player[]> {
-    return await this.playerModel.find()
+    return await this.playerModel.find().populate('category')
   }
 
   async findById(id: string): Promise<Player> {
@@ -27,13 +25,13 @@ export class PlayersRepository {
     return await this.playerModel.findOne({ email })
   }
 
-  async update(_id: string, updatePlayerDto: UpdatePlayerDto): Promise<Player> {
-    return await this.playerModel.findByIdAndUpdate({ _id }, { $set: updatePlayerDto })
+  async update(_id: string, player: Player): Promise<Player> {
+    return await this.playerModel.findOneAndUpdate({ _id }, { $set: player })
   }
 
-  async delete(id: string): Promise<MessageReturn> {
+  async delete(_id: string): Promise<MessageReturn> {
     await this.playerModel.deleteOne({
-      _id: id,
+      _id,
     })
     return {
       message: 'Player deleted with successfully.',

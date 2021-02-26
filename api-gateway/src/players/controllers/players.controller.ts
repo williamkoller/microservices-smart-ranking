@@ -29,7 +29,7 @@ export class PlayersController {
     return await this.clientProxyProvider
       .requestAdminServerInstance()
       .send('find-players', '')
-      .pipe(timeout(8000))
+      .pipe(timeout(12000))
       .toPromise()
   }
 
@@ -71,14 +71,14 @@ export class PlayersController {
 
     const imgUrl = await this.awsS3Service.uploadFile(file, _id)
 
-    // const updatePlayerDto: UpdatePlayerDto = {}
-    // updatePlayerDto.igmUrl = imgUrl.url
+    const updatePlayerDto: UpdatePlayerDto = {}
+    updatePlayerDto.imgUrl = imgUrl.url
 
-    return await this.clientProxyProvider
+    await this.clientProxyProvider
       .requestAdminServerInstance()
-      .emit('update-player', { _id, imgUrl })
+      .emit('update-player', { id: _id, player: updatePlayerDto })
       .toPromise()
 
-    // return await this.clientProxyProvider.requestAdminServerInstance().send('find-players', _id).toPromise()
+    return await this.clientProxyProvider.requestAdminServerInstance().send('find-players', _id).toPromise()
   }
 }
