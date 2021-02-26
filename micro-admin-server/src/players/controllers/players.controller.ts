@@ -17,7 +17,7 @@ export class PlayersController {
     const originalMessage = ctx.getMessage()
 
     try {
-      this.logger.log(`iPlayer: ${JSON.stringify(player)}`)
+      this.logger.log(`player: ${JSON.stringify(player)}`)
       await this.playersService.create(player)
       await channel.ack(originalMessage)
     } catch (e) {

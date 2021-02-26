@@ -24,7 +24,7 @@ export class AwsS3Service {
 
       const urlKey = `${id}.${fileExt}`
 
-      this.s3
+      await this.s3
         .putObject({
           Bucket: bucketName,
           Body: file.buffer,

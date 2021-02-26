@@ -15,7 +15,7 @@ export class CategoriesRepository {
   }
 
   async listCategories(): Promise<Array<Category>> {
-    return await this.categoryModel.find()
+    return await this.categoryModel.find({}, { __v: false })
   }
 
   async listById(_id: string): Promise<Category> {
