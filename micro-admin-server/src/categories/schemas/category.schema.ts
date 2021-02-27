@@ -17,7 +17,7 @@ export const CategorySchema = new mongoose.Schema(
           type: String,
         },
         value: {
-          value: Number,
+          type: Number,
         },
       },
     ],

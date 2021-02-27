@@ -19,7 +19,11 @@ export class CategoriesService {
     }
   }
   async listCategories(): Promise<Category[]> {
-    return this.categoriesRepository.listCategories()
+    const categories = await this.categoriesRepository.listCategories()
+    if (categories?.length === 0) {
+      throw new RpcException('No record found.')
+    }
+    return categories
   }
 
   async listById(_id: string): Promise<Category> {

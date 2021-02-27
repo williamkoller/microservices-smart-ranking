@@ -36,7 +36,7 @@ export class AwsS3Service {
         url: `https://${bucketName}.s3-${region}.amazonaws.com/${urlKey}`,
       }
     } catch (e) {
-      this.logger.error(`Error: ${JSON.stringify(e.message)}`)
+      this.logger.error(`Error processing the image: ${JSON.stringify(e.message)}`)
       throw new BadRequestException(e.message)
     }
   }

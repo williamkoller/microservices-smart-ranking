@@ -24,7 +24,7 @@ export class PlayersService {
 
   async listPlayers(): Promise<Array<Player>> {
     const players = await this.playersRepository.listAll()
-    if (!players) {
+    if (players?.length === 0) {
       throw new RpcException('No record found.')
     }
     return players
