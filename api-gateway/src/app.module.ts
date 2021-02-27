@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config'
 import { CategoriesModule } from '@/categories/categories.module'
 import { PlayersModule } from '@/players/players.module'
 import { AwsModule } from '@/aws/aws.module'
+import { ChallengesModule } from '@/challenges/challenges.module'
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { AwsModule } from '@/aws/aws.module'
     CategoriesModule,
     PlayersModule,
     AwsModule,
+    ChallengesModule,
   ],
   controllers: [],
   providers: [],
