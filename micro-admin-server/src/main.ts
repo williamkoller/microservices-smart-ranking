@@ -13,8 +13,6 @@ async function bootstrap() {
       noAck: false,
       queue: 'admin-server',
     },
-    abortOnError: true,
-    logger: true,
   })
 
   app.listen(() => logger.log('Microservice is listening.'))

@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common'
 import { ChallengesController } from '@/challenges/controllers/challenges.controller'
 
 @Module({
-  providers: [ClientProxyModule],
+  imports: [ClientProxyModule],
   controllers: [ChallengesController],
 })
 export class ChallengesModule {}
