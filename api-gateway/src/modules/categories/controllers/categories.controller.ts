@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common'
 import { Observable } from 'rxjs'
-import { ClientProxyProvider } from '@/shared/providers/client-proxy.provider'
+import { ClientProxyProvider } from '@/modules/shared/providers/client-proxy.provider'
 import { CreateCategoryDto, UpdateCategoryDto } from '@/categories/dtos'
 
 @Controller('categories')

@@ -15,7 +15,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express'
 import { Observable } from 'rxjs'
 import { timeout } from 'rxjs/operators'
-import { ClientProxyProvider } from '@/shared/providers/client-proxy.provider'
+import { ClientProxyProvider } from '@/modules/shared/providers/client-proxy.provider'
 import { CreatePlayerDto, UpdatePlayerDto } from '@/players/dtos'
 import { AwsS3Service } from '@/aws/s3/aws-s3.service'
 import { ClientProxy } from '@nestjs/microservices'

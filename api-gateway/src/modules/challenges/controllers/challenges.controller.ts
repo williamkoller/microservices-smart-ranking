@@ -1,4 +1,4 @@
-import { ClientProxyProvider } from '@/shared/providers/client-proxy.provider'
+import { ClientProxyProvider } from '@/modules/shared/providers/client-proxy.provider'
 import { Controller } from '@nestjs/common'
 
 @Controller('challenges')

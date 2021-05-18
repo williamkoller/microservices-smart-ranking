@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { ClientProxyModule } from '@/shared/modules/client-proxy.module'
+import { ClientProxyModule } from '@/modules/shared/modules/client-proxy.module'
 import { PlayersController } from '@/players/controllers/players.controller'
 import { AwsModule } from '@/aws/aws.module'
 

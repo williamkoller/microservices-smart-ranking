@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core'
-import { AppModule } from '@/app.module'
-import { HttpExceptionFilter } from '@/common/filters/http-exception.filter'
-import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor'
-import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor'
+import { AppModule } from '@/modules/app/app.module'
+import { HttpExceptionFilter } from '@/modules/common/filters/http-exception.filter'
+import { LoggingInterceptor } from '@/modules/common/interceptors/logging.interceptor'
+import { TimeoutInterceptor } from '@/modules/common/interceptors/timeout.interceptor'
 import { Logger } from '@nestjs/common'
 import { NestExpressApplication } from '@nestjs/platform-express'
 
