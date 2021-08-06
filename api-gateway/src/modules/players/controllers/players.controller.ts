@@ -25,12 +25,8 @@ export class PlayersController {
   constructor(private readonly clientProxyProvider: ClientProxyProvider, private readonly awsService: AwsService) {}
 
   @Get()
-  async listPlayers(): Promise<Observable<any>> {
-    return await this.clientProxyProvider
-      .requestAdminServerInstance()
-      .send('find-players', '')
-      .pipe(timeout(12000))
-      .toPromise()
+  async findAll(): Promise<Observable<ClientProxy>> {
+    return await this.clientProxyProvider.requestAdminServerInstance().send('find-players', '').toPromise()
   }
 
   @Get('id')

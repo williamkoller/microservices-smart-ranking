@@ -1,5 +1,5 @@
-import { Document } from 'mongoose'
 import { Category } from '@/modules/categories/interfaces/category.interface'
+import { Document } from 'mongoose'
 
 export interface Player extends Document {
   name: string
@@ -8,5 +8,5 @@ export interface Player extends Document {
   category: Category
   imgUrl: string
   ranking: string
-  rankingPosition: string
+  rankingPosition: number
 }

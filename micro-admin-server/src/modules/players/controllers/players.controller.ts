@@ -38,7 +38,7 @@ export class PlayersController {
       if (id) {
         return await this.playersService.findById(id)
       }
-      return await this.playersService.listPlayers()
+      return await this.playersService.findAll()
     } finally {
       await channel.ack(originalMessage)
     }

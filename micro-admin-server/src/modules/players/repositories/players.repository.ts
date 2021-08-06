@@ -14,7 +14,7 @@ export class PlayersRepository {
   }
 
   async listAll(): Promise<Player[]> {
-    return await this.playerModel.find({}, { __v: false }).populate('category', { __v: false })
+    return await this.playerModel.find({}, { __v: false })
   }
 
   async findById(id: string): Promise<Player> {
