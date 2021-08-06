@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { S3 } from 'aws-sdk'
-import { UrlType } from '@/aws/types/url.type'
+import { UrlType } from '@/modules/aws/types/url.type'
 
 @Injectable()
 export class AwsS3Service {

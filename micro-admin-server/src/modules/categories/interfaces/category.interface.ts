@@ -1,4 +1,4 @@
-import { EventType } from '@/categories/types/event.type'
+import { EventType } from '@/modules/categories/types/event.type'
 import { Document } from 'mongoose'
 
 export type Category = Document

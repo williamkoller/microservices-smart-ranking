@@ -1,8 +1,8 @@
 import { Controller, Logger } from '@nestjs/common'
 import { Ctx, EventPattern, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
-import { CategoriesService } from '@/categories/services/categories.service'
-import { CreateCategoryDto } from '@/categories/dtos/create-category.dto'
-import { UpdateCategoryDto } from '@/categories/dtos/update-category.dto'
+import { CategoriesService } from '@/modules/categories/services/categories.service'
+import { CreateCategoryDto } from '@/modules/categories/dtos/create-category.dto'
+import { UpdateCategoryDto } from '@/modules/categories/dtos/update-category.dto'
 
 const ackErrors: string[] = ['E11000']
 
@@ -39,7 +39,7 @@ export class CategoriesController {
 
     try {
       if (id) {
-        return this.categoriesService.listById(id)
+        return this.categoriesService.findById(id)
       }
       return this.categoriesService.listCategories()
     } finally {

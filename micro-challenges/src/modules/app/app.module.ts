@@ -1,7 +1,8 @@
-import { Module } from '@nestjs/common'
+import { forwardRef, Module } from '@nestjs/common'
+import { ChallengeModule } from '../challenges/challenge.module'
 
 @Module({
-  imports: [],
+  imports: [forwardRef(() => ChallengeModule)],
   controllers: [],
   providers: [],
 })

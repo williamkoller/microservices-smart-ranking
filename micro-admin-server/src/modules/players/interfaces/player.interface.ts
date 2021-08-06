@@ -1,5 +1,5 @@
 import { Document } from 'mongoose'
-import { Category } from '@/categories/interfaces/category.interface'
+import { Category } from '@/modules/categories/interfaces/category.interface'
 
 export interface Player extends Document {
   name: string

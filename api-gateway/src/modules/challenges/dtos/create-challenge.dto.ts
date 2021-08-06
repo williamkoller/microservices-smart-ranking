@@ -1,7 +1,7 @@
-import { ArrayMinSize, IsArray, IsNotEmpty, IsString } from 'class-validator'
 import { EventType } from '@/modules/categories/types/event.type'
+import { IsNotEmpty, IsObject, IsString } from 'class-validator'
 
-export class CreateCategoryDto {
+export class CreateChallengeDto {
   @IsString()
   @IsNotEmpty()
   category: string
@@ -10,7 +10,7 @@ export class CreateCategoryDto {
   @IsNotEmpty()
   description: string
 
-  @IsArray()
-  @ArrayMinSize(1)
-  events: Array<EventType>
+  @IsObject()
+  @IsNotEmpty()
+  events: EventType
 }

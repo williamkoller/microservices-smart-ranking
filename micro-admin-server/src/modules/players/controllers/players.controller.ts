@@ -1,7 +1,7 @@
 import { Controller, Logger } from '@nestjs/common'
 import { Ctx, MessagePattern, EventPattern, Payload, RmqContext } from '@nestjs/microservices'
-import { PlayersService } from '@/players/services/players.service'
-import { Player } from '@/players/interfaces/player.interface'
+import { PlayersService } from '@/modules/players/services/players.service'
+import { Player } from '@/modules/players/interfaces/player.interface'
 
 const ackErrors: string[] = ['E11000']
 

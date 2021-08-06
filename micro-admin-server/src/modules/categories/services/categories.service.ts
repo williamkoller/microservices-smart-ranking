@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { RpcException } from '@nestjs/microservices'
-import { CategoriesRepository } from '@/categories/repositories/categories.repository'
-import { CreateCategoryDto } from '@/categories/dtos/create-category.dto'
-import { UpdateCategoryDto } from '@/categories/dtos/update-category.dto'
+import { CategoriesRepository } from '@/modules/categories/repositories/categories.repository'
+import { CreateCategoryDto } from '@/modules/categories/dtos/create-category.dto'
+import { UpdateCategoryDto } from '@/modules/categories/dtos/update-category.dto'
 import { Category } from '../interfaces/category.interface'
 
 @Injectable()
@@ -19,16 +19,16 @@ export class CategoriesService {
     }
   }
   async listCategories(): Promise<Category[]> {
-    const categories = await this.categoriesRepository.listCategories()
+    const categories = await this.categoriesRepository.findAll()
     if (categories?.length === 0) {
       throw new RpcException('No record found.')
     }
     return categories
   }
 
-  async listById(_id: string): Promise<Category> {
+  async findById(_id: string): Promise<Category> {
     try {
-      return await this.categoriesRepository.listById(_id)
+      return await this.categoriesRepository.findCategoryById(_id)
     } catch (e) {
       this.logger.log(`Error: ${JSON.stringify(e)}`)
       throw new RpcException(e.message)

@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { RpcException } from '@nestjs/microservices'
-import { PlayersRepository } from '@/players/repositories/players.repository'
+import { PlayersRepository } from '@/modules/players/repositories/players.repository'
 import { Player } from '../interfaces/player.interface'
 import { MessageReturn } from '../types/message-return.type'
 

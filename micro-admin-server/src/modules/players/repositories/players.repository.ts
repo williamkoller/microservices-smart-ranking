@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-import { Player } from '@/players/interfaces/player.interface'
-import { MessageReturn } from '@/players/types/message-return.type'
+import { Player } from '@/modules/players/interfaces/player.interface'
+import { MessageReturn } from '@/modules/players/types/message-return.type'
 
 @Injectable()
 export class PlayersRepository {
