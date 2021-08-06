@@ -5,6 +5,6 @@ import { timeout } from 'rxjs/operators'
 @Injectable()
 export class TimeoutInterceptor implements NestInterceptor {
   intercept(ctx: ExecutionContext, next: CallHandler): Observable<any> {
-    return next.handle().pipe(timeout(6000))
+    return next.handle().pipe(timeout(10000))
   }
 }

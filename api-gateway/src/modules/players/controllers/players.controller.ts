@@ -17,12 +17,12 @@ import { Observable } from 'rxjs'
 import { timeout } from 'rxjs/operators'
 import { ClientProxyProvider } from '@/modules/shared/providers/client-proxy.provider'
 import { CreatePlayerDto, UpdatePlayerDto } from '@/modules/players/dtos'
-import { AwsS3Service } from '@/modules/aws/s3/aws-s3.service'
+import { AwsService } from '@/modules/aws/s3/aws.service'
 import { ClientProxy } from '@nestjs/microservices'
 
 @Controller('players')
 export class PlayersController {
-  constructor(private readonly clientProxyProvider: ClientProxyProvider, private readonly awsS3Service: AwsS3Service) {}
+  constructor(private readonly clientProxyProvider: ClientProxyProvider, private readonly awsService: AwsService) {}
 
   @Get()
   async listPlayers(): Promise<Observable<any>> {
@@ -69,7 +69,7 @@ export class PlayersController {
       throw new NotFoundException(`Player not found.`)
     }
 
-    const imgUrl = await this.awsS3Service.uploadFile(file, _id)
+    const imgUrl = await this.awsService.uploadFile(file, _id)
 
     const updatePlayerDto: UpdatePlayerDto = {}
     updatePlayerDto.imgUrl = imgUrl.url

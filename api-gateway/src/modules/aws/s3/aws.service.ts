@@ -4,31 +4,30 @@ import { S3 } from 'aws-sdk'
 import { UrlType } from '@/modules/aws/types/url.type'
 
 @Injectable()
-export class AwsS3Service {
-  private logger = new Logger(AwsS3Service.name)
+export class AwsService {
+  private logger = new Logger(AwsService.name)
   private s3: S3
   constructor(private readonly configService: ConfigService) {
     this.s3 = new S3({
-      region: this.configService.get<string>('AWS_S3_REGION'),
-      accessKeyId: this.configService.get<string>('AWS_S3_ACCESS_KEY_ID'),
-      secretAccessKey: this.configService.get<string>('AWS_S3_SECRET_ACCESS_KEY'),
+      region: this.configService.get<string>('AWS_REGION'),
+      accessKeyId: this.configService.get<string>('AWS_KEY'),
+      secretAccessKey: this.configService.get<string>('AWS_SECRET'),
     })
   }
 
-  public async uploadFile(file: any, id: string): Promise<UrlType> {
+  public async uploadFile(file: Buffer, id: string): Promise<UrlType> {
     try {
-      const bucketName = this.configService.get<string>('AWS_S3_BUCKET_NAME')
-      const region = this.configService.get<string>('AWS_S3_REGION')
+      const bucketName = this.configService.get<string>('AWS_BUCKET_NAME')
+      const region = this.configService.get<string>('AWS_REGION')
 
-      const fileExt = file.originalname.split('.')[1]
-
-      const urlKey = `${id}.${fileExt}`
+      const urlKey = `${id}.png`
 
       await this.s3
         .putObject({
           Bucket: bucketName,
-          Body: file.buffer,
+          Body: file,
           Key: urlKey,
+          ACL: 'public-read',
         })
         .promise()
 
